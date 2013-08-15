@@ -9,5 +9,5 @@ import java.nio.ByteBuffer
  * Time: 20:49
  */
 private[cassandra] object CassandraActorConversions {
-  implicit def string2ByteBuffer(str: String): ByteBuffer= ByteBufferUtil.bytes(str)
+  private[cassandra] implicit def string2ByteBuffer(str: String): ByteBuffer = ByteBufferUtil.bytes(str)
 }
