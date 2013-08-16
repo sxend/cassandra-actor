@@ -54,10 +54,10 @@ class CassandraActor(val host: String, val port: Int) extends Actor {
       sender ! promise.future
     }
     case setKeySpace: SetKeySpace => {
-      val promise = Promise[Any]()
+      val promise = Promise()
       asyncClient.set_keyspace(setKeySpace.keySpace, new AsyncMethodCallback[set_keyspace_call] {
         def onComplete(response: set_keyspace_call) {
-          promise.success(response.getResult())
+          promise.success _
           next()
         }
 

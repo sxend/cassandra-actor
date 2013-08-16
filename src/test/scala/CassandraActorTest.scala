@@ -1,7 +1,8 @@
 import akka.actor.{Props, ActorSystem, Actor}
 import akka.util.Timeout
-import arimitsu.sf.actor.cassandra.{SetKeySpace, CassandraActor}
+import arimitsu.sf.actor.cassandra.{GetSlice, SetKeySpace, CassandraActor}
 import akka.pattern.ask
+import org.apache.cassandra.thrift.{ColumnOrSuperColumn, SlicePredicate, ColumnParent, ConsistencyLevel}
 import scala.concurrent.duration._
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -28,9 +29,19 @@ class CassandraActorTest extends Actor {
 
       println("Test start.")
       var cassandraActor = CassandraActorTest.actorSystem.actorOf(Props(CassandraActor("localhost", 9160)))
-      val setKeySpaceFuture: Future[Any] = cassandraActor ? SetKeySpace("asf")
+      val setKeySpaceFuture = cassandraActor ? SetKeySpace("asf")
       setKeySpaceFuture.onSuccess {
         case _ => println("asf success")
+      }
+      val getSliceFuture: Future[Any] = cassandraActor ? GetSlice("" ,new ColumnParent(), new SlicePredicate(),ConsistencyLevel.ONE)
+      getSliceFuture onSuccess {
+        case option: Option[Seq[ColumnOrSuperColumn]] => {
+          option match {
+            case res@Some(Seq(ColumnOrSuperColumn)) => {
+              res.get
+            }
+          }
+        }
       }
       println("Test end.")
     }
