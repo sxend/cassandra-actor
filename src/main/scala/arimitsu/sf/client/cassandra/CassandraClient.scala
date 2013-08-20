@@ -4,6 +4,7 @@ import org.apache.cassandra.thrift._
 import org.apache.cassandra.thrift.Cassandra.AsyncClient
 import org.apache.thrift.async.AsyncMethodCallback
 import org.apache.cassandra.thrift.Cassandra.AsyncClient._
+import org.apache.thrift.transport.TNonblockingSocket
 import scala.concurrent.{Promise, Future}
 import scala.collection.JavaConversions._
 import java.nio.ByteBuffer
@@ -13,10 +14,9 @@ import java.nio.ByteBuffer
  * Date: 13/08/17
  * Time: 0:21
  */
-class CassandraClient(asyncClient: AsyncClient) {
+class CassandraClient(asyncClientFactory: (TNonblockingSocket) => AsyncClient, transport: TNonblockingSocket) {
 
-  //  private[this] val transport = new TNonBlockingSocket(host, port)
-  //  private[this] val asynchronousClient: AsyncClient = new AsyncClient.Factory(new TAsyncClientManager(), new TBinaryProtocol.Factory()).getAsyncClient(transport)
+  private def asyncClient: AsyncClient = asyncClientFactory(transport)
 
   def login(authRequest: AuthenticationRequest): Future[Unit] = {
     val promise = Promise[Unit]()
@@ -285,7 +285,7 @@ class CassandraClient(asyncClient: AsyncClient) {
 
   def describeSplits(cfName: String, startToken: String, endToken: String, keysPerSplit: Int, resultHandler: describe_splits_call): Future[Unit] = {
     val promise = Promise[Unit]()
-    asyncClient.describe_splits(cfName, startToken, endToken, keysPerSplit, new  AsyncMethodCallback[describe_splits_call]() {
+    asyncClient.describe_splits(cfName, startToken, endToken, keysPerSplit, new AsyncMethodCallback[describe_splits_call]() {
       def onComplete(response: describe_splits_call) = promise.success()
 
       def onError(exception: Exception) = promise.failure(exception)
@@ -442,21 +442,5 @@ class CassandraClient(asyncClient: AsyncClient) {
     })
     promise.future
   }
-
-  //  def getSlice(rowKey: String, columnParent: ColumnParent, predicate: SlicePredicate, consistencyLevel: ConsistencyLevel): Future[Option[Seq[ColumnOrSuperColumn]]] = {
-  //    val promise = Promise[Option[Seq[ColumnOrSuperColumn]]]()
-  //    asynchronousClient.get_slice(rowKey, columnParent, predicate, consistencyLevel, new AsyncMethodCallback[get_slice_call] {
-  //      def onComplete(response: get_slice_call) = promise.success(Option(response.getResult)) = {???}//
-  //      def onError(exception: Exception) = promise.failure(exception) = {???}//    })
-  //    promise.future
-  //  }
-
-  //  def setKeySpace(keySpace: String): Future[Unit] = {
-  //    val promise = Promise[Unit]()
-  //    asynchronousClient.set_keyspace(keySpace, new AsyncMethodCallback[set_keyspace_call] {
-  //      def onComplete(response: set_keyspace_call) = promise.success(response.getResult()) = {???}//
-  //      def onError(exception: Exception) = promise.failure(exception) = {???}//    })
-  //    promise.future
-  //  }
 
 }
