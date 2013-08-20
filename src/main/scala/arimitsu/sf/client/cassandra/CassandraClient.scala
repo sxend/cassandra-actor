@@ -150,7 +150,7 @@ class CassandraClient(asyncClient: AsyncClient) {
     promise.future
   }
 
-  def removeCounter(key: ByteBuffer, columnPath: ColumnPath, consistencyLevel: ConsistencyLevel, resultHandler: remove_counter_call): Future[Unit] = {
+  def removeCounter(key: ByteBuffer, columnPath: ColumnPath, consistencyLevel: ConsistencyLevel): Future[Unit] = {
     val promise = Promise[Unit]()
     asyncClient.remove_counter(key, columnPath, consistencyLevel, new AsyncMethodCallback[remove_counter_call]() {
       def onComplete(response: remove_counter_call) = promise.success()
@@ -160,7 +160,7 @@ class CassandraClient(asyncClient: AsyncClient) {
     promise.future
   }
 
-  def batchMutate(mutationMap: Map[ByteBuffer, Map[String, Seq[Mutation]]], consistencyLevel: ConsistencyLevel, resultHandler: batch_mutate_call): Future[Unit] = {
+  def batchMutate(mutationMap: Map[ByteBuffer, Map[String, Seq[Mutation]]], consistencyLevel: ConsistencyLevel): Future[Unit] = {
     implicit def convert(result: Map[ByteBuffer, Map[String, Seq[Mutation]]]): java.util.Map[ByteBuffer, java.util.Map[String, java.util.List[Mutation]]] = ??? // FIXME
     val promise = Promise[Unit]()
     asyncClient.batch_mutate(mutationMap, consistencyLevel, new AsyncMethodCallback[batch_mutate_call]() {
@@ -172,113 +172,275 @@ class CassandraClient(asyncClient: AsyncClient) {
   }
 
 
-  def atomicBatchMutate(mutation_map: Map[ByteBuffer, Map[String, Seq[Mutation]]], consistency_level: ConsistencyLevel, resultHandler: atomic_batch_mutate_call) = {
+  def atomicBatchMutate(mutationMap: Map[ByteBuffer, Map[String, Seq[Mutation]]], consistencyLevel: ConsistencyLevel): Future[Unit] = {
+    implicit def convert(result: Map[ByteBuffer, Map[String, Seq[Mutation]]]): java.util.Map[ByteBuffer, java.util.Map[String, java.util.List[Mutation]]] = ??? // FIXME
+    val promise = Promise[Unit]()
+    asyncClient.atomic_batch_mutate(mutationMap, consistencyLevel, new AsyncMethodCallback[atomic_batch_mutate_call]() {
+      def onComplete(response: atomic_batch_mutate_call) = promise.success()
 
-    ???
+      def onError(exception: Exception) = promise.failure(exception)
+    })
+    promise.future
   }
 
-  def truncate(cfName: String, resultHandler: truncate_call) = {
-    ???
+  def truncate(cfName: String, resultHandler: truncate_call): Future[Unit] = {
+    val promise = Promise[Unit]()
+    asyncClient.truncate(cfName, new AsyncMethodCallback[truncate_call]() {
+      def onComplete(response: truncate_call) = promise.success()
+
+      def onError(exception: Exception) = promise.failure(exception)
+    })
+    promise.future
   }
 
-  def describeSchemaVersions(resultHandler: describe_schema_versions_call) = {
-    ???
+  def describeSchemaVersions(resultHandler: describe_schema_versions_call): Future[Unit] = {
+    val promise = Promise[Unit]()
+    asyncClient.describe_schema_versions(new AsyncMethodCallback[describe_schema_versions_call]() {
+      def onComplete(response: describe_schema_versions_call) = promise.success()
+
+      def onError(exception: Exception) = promise.failure(exception)
+    })
+    promise.future
   }
 
-  def describeKeySpaces(resultHandler: describe_keyspaces_call) = {
-    ???
+  def describeKeySpaces(resultHandler: describe_keyspaces_call): Future[Unit] = {
+    val promise = Promise[Unit]()
+    asyncClient.describe_keyspaces(new AsyncMethodCallback[describe_keyspaces_call]() {
+      def onComplete(response: describe_keyspaces_call) = promise.success()
+
+      def onError(exception: Exception) = promise.failure(exception)
+    })
+    promise.future
   }
 
-  def describeClusterName(resultHandler: describe_cluster_name_call) = {
-    ???
+  def describeClusterName(resultHandler: describe_cluster_name_call): Future[Unit] = {
+    val promise = Promise[Unit]()
+    asyncClient.describe_cluster_name(new AsyncMethodCallback[describe_cluster_name_call]() {
+      def onComplete(response: describe_cluster_name_call) = promise.success()
+
+      def onError(exception: Exception) = promise.failure(exception)
+    })
+    promise.future
   }
 
-  def describeVersion(resultHandler: describe_version_call) = {
-    ???
+  def describeVersion(resultHandler: describe_version_call): Future[Unit] = {
+    val promise = Promise[Unit]()
+    asyncClient.describe_version(new AsyncMethodCallback[describe_version_call]() {
+      def onComplete(response: describe_version_call) = promise.success()
+
+      def onError(exception: Exception) = promise.failure(exception)
+    })
+    promise.future
   }
 
-  def describeRing(keySpace: String, resultHandler: describe_ring_call) = {
-    ???
+  def describeRing(keySpace: String, resultHandler: describe_ring_call): Future[Unit] = {
+    val promise = Promise[Unit]()
+    asyncClient.describe_ring(keySpace, new AsyncMethodCallback[describe_ring_call]() {
+      def onComplete(response: describe_ring_call) = promise.success()
+
+      def onError(exception: Exception) = promise.failure(exception)
+    })
+    promise.future
   }
 
-  def describeTokenMap(resultHandler: describe_token_map_call) = {
-    ???
+  def describeTokenMap(resultHandler: describe_token_map_call): Future[Unit] = {
+    val promise = Promise[Unit]()
+    asyncClient.describe_token_map(new AsyncMethodCallback[describe_token_map_call]() {
+      def onComplete(response: describe_token_map_call) = promise.success()
+
+      def onError(exception: Exception) = promise.failure(exception)
+    })
+    promise.future
   }
 
-  def describePartitioner(resultHandler: describe_partitioner_call) = {
-    ???
+  def describePartitioner(resultHandler: describe_partitioner_call): Future[Unit] = {
+    val promise = Promise[Unit]()
+    asyncClient.describe_partitioner(new AsyncMethodCallback[describe_partitioner_call]() {
+      def onComplete(response: describe_partitioner_call) = promise.success()
+
+      def onError(exception: Exception) = promise.failure(exception)
+    })
+    promise.future
   }
 
-  def describeSnitch(resultHandler: describe_snitch_call) = {
-    ???
+  def describeSnitch(resultHandler: describe_snitch_call): Future[Unit] = {
+    val promise = Promise[Unit]()
+    asyncClient.describe_snitch(new AsyncMethodCallback[describe_snitch_call]() {
+      def onComplete(response: describe_snitch_call) = promise.success()
+
+      def onError(exception: Exception) = promise.failure(exception)
+    })
+    promise.future
   }
 
-  def describeKeySpace(keySpace: String, resultHandler: describe_keyspace_call) = {
-    ???
+  def describeKeySpace(keySpace: String, resultHandler: describe_keyspace_call): Future[Unit] = {
+    val promise = Promise[Unit]()
+    asyncClient.describe_keyspace(keySpace, new AsyncMethodCallback[describe_keyspace_call]() {
+      def onComplete(response: describe_keyspace_call) = promise.success()
+
+      def onError(exception: Exception) = promise.failure(exception)
+    })
+    promise.future
   }
 
-  def describeSplits(cfName: String, start_token: String, end_token: String, keys_per_split: Int, resultHandler: describe_splits_call) = {
-    ???
+  def describeSplits(cfName: String, startToken: String, endToken: String, keysPerSplit: Int, resultHandler: describe_splits_call): Future[Unit] = {
+    val promise = Promise[Unit]()
+    asyncClient.describe_splits(cfName, startToken, endToken, keysPerSplit, new  AsyncMethodCallback[describe_splits_call]() {
+      def onComplete(response: describe_splits_call) = promise.success()
+
+      def onError(exception: Exception) = promise.failure(exception)
+    })
+    promise.future
   }
 
-  def traceNextQuery(resultHandler: trace_next_query_call) = {
-    ???
+  def traceNextQuery(resultHandler: trace_next_query_call): Future[Unit] = {
+    val promise = Promise[Unit]()
+    asyncClient.trace_next_query(new AsyncMethodCallback[trace_next_query_call]() {
+      def onComplete(response: trace_next_query_call) = promise.success()
+
+      def onError(exception: Exception) = promise.failure(exception)
+    })
+    promise.future
   }
 
-  def describeSplitsEx(cfName: String, start_token: String, end_token: String, keys_per_split: Int, resultHandler: describe_splits_ex_call) = {
-    ???
+  def describeSplitsEx(cfName: String, startToken: String, endToken: String, keysPerSplit: Int, resultHandler: describe_splits_ex_call): Future[Unit] = {
+    val promise = Promise[Unit]()
+    asyncClient.describe_splits_ex(cfName, startToken, endToken, keysPerSplit, new AsyncMethodCallback[describe_splits_ex_call]() {
+      def onComplete(response: describe_splits_ex_call) = promise.success()
+
+      def onError(exception: Exception) = promise.failure(exception)
+    })
+    promise.future
   }
 
-  def systemAddColumnFamily(cf_def: CfDef, resultHandler: system_add_column_family_call) = {
-    ???
+  def systemAddColumnFamily(cfDef: CfDef, resultHandler: system_add_column_family_call): Future[Unit] = {
+    val promise = Promise[Unit]()
+    asyncClient.system_add_column_family(cfDef, new AsyncMethodCallback[system_add_column_family_call]() {
+      def onComplete(response: system_add_column_family_call) = promise.success()
+
+      def onError(exception: Exception) = promise.failure(exception)
+    })
+    promise.future
   }
 
-  def systemDropColumnFamily(column_family: String, resultHandler: system_drop_column_family_call) = {
-    ???
+  def systemDropColumnFamily(columnFamily: String, resultHandler: system_drop_column_family_call): Future[Unit] = {
+    val promise = Promise[Unit]()
+    asyncClient.system_drop_column_family(columnFamily, new AsyncMethodCallback[system_drop_column_family_call]() {
+      def onComplete(response: system_drop_column_family_call) = promise.success()
+
+      def onError(exception: Exception) = promise.failure(exception)
+    })
+    promise.future
   }
 
-  def systemAddKeySpace(ks_def: KsDef, resultHandler: system_add_keyspace_call) = {
-    ???
+  def systemAddKeySpace(ksDef: KsDef, resultHandler: system_add_keyspace_call): Future[Unit] = {
+    val promise = Promise[Unit]()
+    asyncClient.system_add_keyspace(ksDef, new AsyncMethodCallback[system_add_keyspace_call]() {
+      def onComplete(response: system_add_keyspace_call) = promise.success()
+
+      def onError(exception: Exception) = promise.failure(exception)
+    })
+    promise.future
   }
 
-  def systemDropKeySpace(keySpace: String, resultHandler: system_drop_keyspace_call) = {
-    ???
+  def systemDropKeySpace(keySpace: String, resultHandler: system_drop_keyspace_call): Future[Unit] = {
+    val promise = Promise[Unit]()
+    asyncClient.system_drop_keyspace(keySpace, new AsyncMethodCallback[system_drop_keyspace_call]() {
+      def onComplete(response: system_drop_keyspace_call) = promise.success()
+
+      def onError(exception: Exception) = promise.failure(exception)
+    })
+    promise.future
   }
 
-  def systemUpdateKeySpace(ksDef: KsDef, resultHandler: system_update_keyspace_call) = {
-    ???
+  def systemUpdateKeySpace(ksDef: KsDef, resultHandler: system_update_keyspace_call): Future[Unit] = {
+    val promise = Promise[Unit]()
+    asyncClient.system_update_keyspace(ksDef, new AsyncMethodCallback[system_update_keyspace_call]() {
+      def onComplete(response: system_update_keyspace_call) = promise.success()
+
+      def onError(exception: Exception) = promise.failure(exception)
+    })
+    promise.future
   }
 
-  def systemUpdateColumnFamily(cfDef: CfDef, resultHandler: system_update_column_family_call) = {
-    ???
+  def systemUpdateColumnFamily(cfDef: CfDef, resultHandler: system_update_column_family_call): Future[Unit] = {
+    val promise = Promise[Unit]()
+    asyncClient.system_update_column_family(cfDef, new AsyncMethodCallback[system_update_column_family_call]() {
+      def onComplete(response: system_update_column_family_call) = promise.success()
+
+      def onError(exception: Exception) = promise.failure(exception)
+    })
+    promise.future
   }
 
-  def executeCqlQuery(query: ByteBuffer, compression: Compression, resultHandler: execute_cql_query_call) = {
-    ???
+  def executeCqlQuery(query: ByteBuffer, compression: Compression, resultHandler: execute_cql_query_call): Future[Unit] = {
+    val promise = Promise[Unit]()
+    asyncClient.execute_cql_query(query, compression, new AsyncMethodCallback[execute_cql_query_call]() {
+      def onComplete(response: execute_cql_query_call) = promise.success()
+
+      def onError(exception: Exception) = promise.failure(exception)
+    })
+    promise.future
   }
 
-  def executeCql3Query(query: ByteBuffer, compression: Compression, consistency: ConsistencyLevel, resultHandler: execute_cql3_query_call) = {
-    ???
+  def executeCql3Query(query: ByteBuffer, compression: Compression, consistency: ConsistencyLevel, resultHandler: execute_cql3_query_call): Future[Unit] = {
+    val promise = Promise[Unit]()
+    asyncClient.execute_cql3_query(query, compression, consistency, new AsyncMethodCallback[execute_cql3_query_call]() {
+      def onComplete(response: execute_cql3_query_call) = promise.success()
+
+      def onError(exception: Exception) = promise.failure(exception)
+    })
+    promise.future
   }
 
-  def prepareCqlQuery(query: ByteBuffer, compression: Compression, resultHandler: prepare_cql_query_call) = {
-    ???
+  def prepareCqlQuery(query: ByteBuffer, compression: Compression, resultHandler: prepare_cql_query_call): Future[Unit] = {
+    val promise = Promise[Unit]()
+    asyncClient.prepare_cql_query(query, compression, new AsyncMethodCallback[prepare_cql_query_call]() {
+      def onComplete(response: prepare_cql_query_call) = promise.success()
+
+      def onError(exception: Exception) = promise.failure(exception)
+    })
+    promise.future
   }
 
-  def prepareCql3Query(query: ByteBuffer, compression: Compression, resultHandler: prepare_cql3_query_call) = {
-    ???
+  def prepareCql3Query(query: ByteBuffer, compression: Compression, resultHandler: prepare_cql3_query_call): Future[Unit] = {
+    val promise = Promise[Unit]()
+    asyncClient.prepare_cql3_query(query, compression, new AsyncMethodCallback[prepare_cql3_query_call]() {
+      def onComplete(response: prepare_cql3_query_call) = promise.success()
+
+      def onError(exception: Exception) = promise.failure(exception)
+    })
+    promise.future
   }
 
-  def executePreparedCqlQuery(itemId: Int, values: Seq[ByteBuffer], resultHandler: execute_prepared_cql_query_call) = {
-    ???
+  def executePreparedCqlQuery(itemId: Int, values: Seq[ByteBuffer], resultHandler: execute_prepared_cql_query_call): Future[Unit] = {
+    val promise = Promise[Unit]()
+    asyncClient.execute_prepared_cql_query(itemId, values, new AsyncMethodCallback[execute_prepared_cql_query_call]() {
+      def onComplete(response: execute_prepared_cql_query_call) = promise.success()
+
+      def onError(exception: Exception) = promise.failure(exception)
+    })
+    promise.future
   }
 
-  def executePreparedCql3Query(itemId: Int, values: Seq[ByteBuffer], consistency: ConsistencyLevel, resultHandler: execute_prepared_cql3_query_call) = {
-    ???
+  def executePreparedCql3Query(itemId: Int, values: Seq[ByteBuffer], consistency: ConsistencyLevel, resultHandler: execute_prepared_cql3_query_call): Future[Unit] = {
+    val promise = Promise[Unit]()
+    asyncClient.execute_prepared_cql3_query(itemId, values, consistency, new AsyncMethodCallback[execute_prepared_cql3_query_call]() {
+      def onComplete(response: execute_prepared_cql3_query_call) = promise.success()
+
+      def onError(exception: Exception) = promise.failure(exception)
+    })
+    promise.future
   }
 
-  def setCqlVersion(version: String, resultHandler: set_cql_version_call) = {
-    ???
+  def setCqlVersion(version: String, resultHandler: set_cql_version_call): Future[Unit] = {
+    val promise = Promise[Unit]()
+    asyncClient.set_cql_version(version, new AsyncMethodCallback[set_cql_version_call]() {
+      def onComplete(response: set_cql_version_call) = promise.success()
+
+      def onError(exception: Exception) = promise.failure(exception)
+    })
+    promise.future
   }
 
   //  def getSlice(rowKey: String, columnParent: ColumnParent, predicate: SlicePredicate, consistencyLevel: ConsistencyLevel): Future[Option[Seq[ColumnOrSuperColumn]]] = {
